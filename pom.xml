@@ -19,21 +19,6 @@
     </properties>
 
     <dependencies>
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/ch.qos.logback/logback-classic &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>ch.qos.logback</groupId>-->
-<!--            <artifactId>logback-classic</artifactId>-->
-<!--            <version>1.2.3</version>-->
-<!--&lt;!&ndash;            <scope>test</scope>&ndash;&gt;-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>ch.qos.logback</groupId>-->
-<!--            <artifactId>logback-core</artifactId>-->
-<!--            <version>1.2.3</version>-->
-<!--            &lt;!&ndash;            <scope>test</scope>&ndash;&gt;-->
-<!--        </dependency>-->
-
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
