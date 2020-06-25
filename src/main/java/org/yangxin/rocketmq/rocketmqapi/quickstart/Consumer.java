@@ -2,7 +2,6 @@ package org.yangxin.rocketmq.rocketmqapi.quickstart;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -10,8 +9,6 @@ import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
 import org.yangxin.rocketmq.rocketmqapi.constants.Const;
-
-import java.util.List;
 
 /**
  * 消费者
@@ -24,7 +21,8 @@ public class Consumer {
 
     public static void main(String[] args) throws MQClientException {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("test_quick_consumer_name");
-        consumer.setNamesrvAddr(Const.NAME_SRV_ADDR);
+        consumer.setNamesrvAddr(Const.NAMESRV_ADDR_MASTER_SLAVE);
+//        consumer.setNamesrvAddr(Const.NAMESRV_ADDR_SINGLE);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         consumer.subscribe("test_quick_topic", "*");
         consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {

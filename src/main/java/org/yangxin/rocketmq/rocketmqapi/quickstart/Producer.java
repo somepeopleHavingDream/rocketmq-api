@@ -20,10 +20,11 @@ public class Producer {
 
     public static void main(String[] args) throws MQClientException, RemotingException, InterruptedException, MQBrokerException {
         DefaultMQProducer producer = new DefaultMQProducer("test_quick_producer_name");
-        producer.setNamesrvAddr(Const.NAME_SRV_ADDR);
+        producer.setNamesrvAddr(Const.NAMESRV_ADDR_MASTER_SLAVE);
+//        producer.setNamesrvAddr(Const.NAMESRV_ADDR_SINGLE);
         producer.start();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             // 1. 创建消息
             // 主题
             Message message = new Message("test_quick_topic",
