@@ -38,6 +38,8 @@ public class Producer {
                     ("Hello RocketMQ" + i).getBytes());
 
             // 2.1 同步发送消息
+//            message.setDelayTimeLevel(2);
+
             SendResult sendResult = producer.send(message);
             SendStatus sendStatus = sendResult.getSendStatus();
             log.info("status: [{}]", sendStatus);
