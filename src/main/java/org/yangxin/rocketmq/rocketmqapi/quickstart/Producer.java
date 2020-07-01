@@ -3,13 +3,11 @@ package org.yangxin.rocketmq.rocketmqapi.quickstart;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.client.producer.DefaultMQProducer;
-import org.apache.rocketmq.client.producer.SendCallback;
-import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.client.producer.SendStatus;
+import org.apache.rocketmq.client.producer.*;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.yangxin.rocketmq.rocketmqapi.constants.Const;
+
 
 /**
  * 生产者
@@ -39,6 +37,12 @@ public class Producer {
 
             // 2.1 同步发送消息
 //            message.setDelayTimeLevel(2);
+
+            SendResult result = producer.send(message, (list, msg, o) -> {
+                int queueNumber = (int) o;
+                return list.get(queueNumber);
+            }, 2);
+            log.info("result: [{}]", result);
 
             SendResult sendResult = producer.send(message);
             SendStatus sendStatus = sendResult.getSendStatus();
