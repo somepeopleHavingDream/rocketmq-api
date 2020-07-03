@@ -19,7 +19,8 @@ public class Producer {
     public static void main(String[] args) throws MQClientException, InterruptedException {
         String groupName = "test_pull_producer_name";
         DefaultMQProducer producer = new DefaultMQProducer(groupName);
-        producer.setNamesrvAddr(Const.NAMESRV_ADDR_MASTER_SLAVE);
+        producer.setNamesrvAddr(Const.NAMESRV_ADDR_SINGLE);
+//        producer.setNamesrvAddr(Const.NAMESRV_ADDR_MASTER_SLAVE);
         producer.start();
 
         for (int i = 0; i < 10; i++) {
@@ -40,5 +41,7 @@ public class Producer {
                 Thread.sleep(3000);
             }
         }
+
+        producer.shutdown();
     }
 }

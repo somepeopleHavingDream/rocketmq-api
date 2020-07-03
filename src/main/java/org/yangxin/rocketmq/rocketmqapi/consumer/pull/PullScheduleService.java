@@ -23,7 +23,8 @@ public class PullScheduleService {
         String groupName = "test_pull_consumer_name";
 
         final MQPullConsumerScheduleService scheduleService = new MQPullConsumerScheduleService(groupName);
-        scheduleService.getDefaultMQPullConsumer().setNamesrvAddr(Const.NAMESRV_ADDR_MASTER_SLAVE);
+        scheduleService.getDefaultMQPullConsumer().setNamesrvAddr(Const.NAMESRV_ADDR_SINGLE);
+//        scheduleService.getDefaultMQPullConsumer().setNamesrvAddr(Const.NAMESRV_ADDR_MASTER_SLAVE);
         scheduleService.setMessageModel(MessageModel.CLUSTERING);
         scheduleService.registerPullTaskCallback("test_pull_topic", (mq, context) -> {
             MQPullConsumer consumer = context.getPullConsumer();

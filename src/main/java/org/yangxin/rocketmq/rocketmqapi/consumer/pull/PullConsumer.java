@@ -23,7 +23,7 @@ import java.util.Map;
 public class PullConsumer {
 
     /**
-     * Map<key, value> key为指定的队列，value为这个队列拉取数据的最后位置
+     * Map<key, value> key为指定的队列，value为这个队列下一个拉取数据的位置
      */
     private static final Map<MessageQueue, Long> OFFSET_TABLE = new HashMap<>();
 
@@ -31,8 +31,8 @@ public class PullConsumer {
     public static void main(String[] args) throws MQClientException {
         String groupName = "test_pull_consumer_name";
         DefaultMQPullConsumer consumer = new DefaultMQPullConsumer(groupName);
-//        DefaultLitePullConsumer consumer = new DefaultLitePullConsumer(groupName);
-        consumer.setNamesrvAddr(Const.NAMESRV_ADDR_MASTER_SLAVE);
+        consumer.setNamesrvAddr(Const.NAMESRV_ADDR_SINGLE);
+//        consumer.setNamesrvAddr(Const.NAMESRV_ADDR_MASTER_SLAVE);
         consumer.start();
         log.info("consumer start...");
 
@@ -83,11 +83,6 @@ public class PullConsumer {
 
     private static long getMessageQueueOffset(MessageQueue messageQueue) {
         Long offset = OFFSET_TABLE.get(messageQueue);
-//        if (offset != null) {
-//            return offset;
-//        }
-//        return 0;
-
         return offset != null ? offset : 0;
     }
 }
