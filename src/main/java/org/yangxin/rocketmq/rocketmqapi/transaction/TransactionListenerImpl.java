@@ -20,13 +20,14 @@ public class TransactionListenerImpl implements TransactionListener {
 
         // tx.begin
         // 数据库的落库操作
-        // tx.commit
 
+        // tx.commit
         return LocalTransactionState.COMMIT_MESSAGE;
     }
 
     @Override
     public LocalTransactionState checkLocalTransaction(MessageExt msg) {
-        return null;
+        log.info("回调消息检查，msg: [{}]", msg);
+        return LocalTransactionState.COMMIT_MESSAGE;
     }
 }

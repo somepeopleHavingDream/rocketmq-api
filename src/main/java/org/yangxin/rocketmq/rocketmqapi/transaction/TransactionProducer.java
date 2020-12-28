@@ -4,8 +4,10 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.TransactionListener;
 import org.apache.rocketmq.client.producer.TransactionMQProducer;
 import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.common.RemotingHelper;
 import org.yangxin.rocketmq.rocketmqapi.constants.Const;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.*;
 
@@ -15,7 +17,7 @@ import java.util.concurrent.*;
  */
 public class TransactionProducer {
 
-    public static void main(String[] args) throws MQClientException, InterruptedException {
+    public static void main(String[] args) throws MQClientException, InterruptedException, UnsupportedEncodingException {
         String producerGroupName = "text_tx_producer_group_name";
         TransactionMQProducer producer = new TransactionMQProducer(producerGroupName);
         ExecutorService executorService = new ThreadPoolExecutor(2,
@@ -39,7 +41,8 @@ public class TransactionProducer {
         Message message = new Message("test_tx_topic",
                 "TagA",
                 "Key",
-                ("hello rocketmq for tx!").getBytes(StandardCharsets.UTF_8));
+                ("hello rocketmq for tx!").getBytes(RemotingHelper.DEFAULT_CHARSET));
+//                ("hello rocketmq for tx!").getBytes(StandardCharsets.UTF_8));
         producer.sendMessageInTransaction(message, "我是回调的参数");
 
         Thread.sleep(Integer.MAX_VALUE);
