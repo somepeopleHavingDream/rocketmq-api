@@ -11,8 +11,6 @@ import org.apache.rocketmq.remoting.common.RemotingHelper;
 import org.yangxin.rocketmq.rocketmqapi.constants.Const;
 
 /**
- * 消费者
- *
  * @author yangxin
  * 2020/06/16 20:29
  */
@@ -21,8 +19,8 @@ public class Consumer {
 
     public static void main(String[] args) throws MQClientException {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("test_quick_consumer_name");
-        consumer.setNamesrvAddr(Const.NAMESRV_ADDR_MASTER_SLAVE);
-//        consumer.setNamesrvAddr(Const.NAMESRV_ADDR_SINGLE);
+//        consumer.setNamesrvAddr(Const.NAMESRV_ADDR_MASTER_SLAVE);
+        consumer.setNamesrvAddr(Const.NAMESRV_ADDR_SINGLE);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         consumer.subscribe("test_quick_topic", "*");
         consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
@@ -31,8 +29,10 @@ public class Consumer {
                 String topic = messageExt.getTopic();
                 String tags = messageExt.getTags();
                 String keys = messageExt.getKeys();
+                int queueId = messageExt.getQueueId();
                 String msgBody = new String(messageExt.getBody(), RemotingHelper.DEFAULT_CHARSET);
-                log.info("topic: [{}], tags: [{}], keys: [{}], msgBody: [{}]", topic, tags, keys, msgBody);
+                log.info("topic: [{}], tags: [{}], keys: [{}], queueId: [{}], msgBody: [{}]",
+                        topic, tags, keys, queueId, msgBody);
             } catch (Exception e) {
                 e.printStackTrace();
 
