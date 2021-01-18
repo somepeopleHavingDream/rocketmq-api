@@ -1,6 +1,7 @@
 package org.yangxin.rocketmq.rocketmqapi.consumer.pull;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
 import org.apache.rocketmq.client.consumer.DefaultMQPullConsumer;
 import org.apache.rocketmq.client.consumer.PullResult;
 import org.apache.rocketmq.client.exception.MQBrokerException;
