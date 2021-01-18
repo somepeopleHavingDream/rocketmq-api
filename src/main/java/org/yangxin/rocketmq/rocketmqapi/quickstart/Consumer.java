@@ -23,8 +23,9 @@ public class Consumer {
         consumer.setNamesrvAddr(Const.NAMESRV_ADDR_SINGLE);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         consumer.subscribe("test_quick_topic", "*");
-        consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
-            MessageExt messageExt = msgs.get(0);
+        // 消费者注册监听来进行消费
+        consumer.registerMessageListener((MessageListenerConcurrently) (messageExtList, context) -> {
+            MessageExt messageExt = messageExtList.get(0);
             try {
                 String topic = messageExt.getTopic();
                 String tags = messageExt.getTags();

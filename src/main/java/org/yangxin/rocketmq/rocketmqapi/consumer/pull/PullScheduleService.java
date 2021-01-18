@@ -13,6 +13,8 @@ import org.yangxin.rocketmq.rocketmqapi.constants.Const;
 import java.util.List;
 
 /**
+ * 推荐用MQPullConsumerScheduleService代替DefaultMQPullConsumer。
+ *
  * @author yangxin
  * 2020/07/02 16:54
  */

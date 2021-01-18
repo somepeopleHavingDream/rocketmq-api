@@ -43,14 +43,15 @@ public class Consumer2 {
      * @author yangxin
      * 2020/07/01 20:47
      */
+    @SuppressWarnings("DuplicatedCode")
     @Slf4j
     static
     class Listener implements MessageListenerConcurrently {
 
         @Override
-        public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+        public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> messageExtList, ConsumeConcurrentlyContext context) {
             try {
-                for (MessageExt msg : msgs) {
+                for (MessageExt msg : messageExtList) {
                     String topic = msg.getTopic();
                     String msgBody = new String(msg.getBody(), StandardCharsets.UTF_8);
                     String tags = msg.getTags();
