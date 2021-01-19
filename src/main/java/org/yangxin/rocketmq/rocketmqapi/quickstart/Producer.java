@@ -34,7 +34,7 @@ public class Producer {
                     ("Hello RocketMQ" + i).getBytes());
 
             // 延迟消息（发送到broker后，延迟一段时间再对consumer可见）
-            // 设置延迟时间级别
+            // 设置延迟时间级别（1s、 5s、 10s、 30s、 1m、 2m、 3m、 4m、 5m、 6m、 7m、 8m、 9m、 10m、 20m、 30m、 1h、 2h）
 //            if (i == 2) {
 //                message.setDelayTimeLevel(2);
 //            }
