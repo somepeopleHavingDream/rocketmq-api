@@ -18,7 +18,7 @@ import java.util.concurrent.*;
 public class TransactionProducer {
 
     public static void main(String[] args) throws MQClientException, InterruptedException, UnsupportedEncodingException {
-        String producerGroupName = "text_tx_producer_group_name";
+        final String producerGroupName = "text_tx_producer_group_name";
         TransactionMQProducer producer = new TransactionMQProducer(producerGroupName);
         ExecutorService executorService = new ThreadPoolExecutor(2,
                 5,
