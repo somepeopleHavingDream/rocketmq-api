@@ -15,14 +15,15 @@ public class TransactionListenerImpl implements TransactionListener {
 
     @Override
     public LocalTransactionState executeLocalTransaction(Message msg, Object arg) {
-        log.info("执行本地事务……");
+        log.info("执行本地事务。");
         log.info("callArg: [{}], msg: [{}]", arg, msg);
 
         // tx.begin
         // 数据库的落库操作
 
         // tx.commit
-        return LocalTransactionState.COMMIT_MESSAGE;
+        return LocalTransactionState.UNKNOW;
+//        return LocalTransactionState.COMMIT_MESSAGE;
     }
 
     @Override
