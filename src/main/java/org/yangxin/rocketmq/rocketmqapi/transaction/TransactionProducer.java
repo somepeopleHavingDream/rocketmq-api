@@ -27,8 +27,9 @@ public class TransactionProducer {
                 new ArrayBlockingQueue<>(2000),
                 r -> {
                     Thread thread = new Thread(r);
-                    thread.setName(producerGroupName);
-                    return null;
+                    thread.setName(producerGroupName + "-check-thread");
+
+                    return thread;
                 });
         producer.setNamesrvAddr(Const.NAMESRV_ADDR_SINGLE);
         producer.setExecutorService(executorService);
@@ -42,7 +43,6 @@ public class TransactionProducer {
                 "TagA",
                 "Key",
                 ("hello rocketmq for tx!").getBytes(RemotingHelper.DEFAULT_CHARSET));
-//                ("hello rocketmq for tx!").getBytes(StandardCharsets.UTF_8));
         producer.sendMessageInTransaction(message, "我是回调的参数");
 
         Thread.sleep(Integer.MAX_VALUE);
