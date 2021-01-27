@@ -1,28 +1,33 @@
-package org.yangxin.rocketmq.rocketmqapi.quickstart;
+package org.yangxin.rocketmq.rocketmqapi.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
 import org.yangxin.rocketmq.rocketmqapi.constants.Const;
 
 /**
  * @author yangxin
- * 2020/06/16 20:29
+ * 1/27/21 10:08 PM
  */
 @SuppressWarnings("DuplicatedCode")
 @Slf4j
 public class Consumer {
 
     public static void main(String[] args) throws MQClientException {
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("test_quick_consumer_name");
+        final String groupName = "test_filter_consumer";
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(groupName);
         consumer.setNamesrvAddr(Const.NAMESRV_ADDR_SINGLE);
-        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-        consumer.subscribe("test_quick_topic", "*");
+
+        // 1. tag
+        consumer.subscribe("test_filter_topic", "TagA");
+
+        /*
+            2. sql过滤（此过滤方式需要在配置文件种开启相关选项，且此过滤方式会损耗broker的性能，不推荐使用。）
+         */
         // 消费者注册监听来进行消费
         consumer.registerMessageListener((MessageListenerConcurrently) (messageExtList, context) -> {
             MessageExt messageExt = messageExtList.get(0);
@@ -49,8 +54,5 @@ public class Consumer {
             }
             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         });
-
-        consumer.start();
-        log.info("consumer start...");
     }
 }
