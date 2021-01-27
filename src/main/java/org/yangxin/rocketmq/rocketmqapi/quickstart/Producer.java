@@ -13,12 +13,12 @@ import org.yangxin.rocketmq.rocketmqapi.constants.Const;
  * @author yangxin
  * 2020/06/16 20:28
  */
+@SuppressWarnings({"AlibabaRemoveCommentedCode", "CommentedOutCode", "AlibabaUndefineMagicConstant"})
 @Slf4j
 public class Producer {
 
     public static void main(String[] args) throws MQClientException, RemotingException, InterruptedException, MQBrokerException {
         DefaultMQProducer producer = new DefaultMQProducer("test_quick_producer_name");
-//        producer.setNamesrvAddr(Const.NAMESRV_ADDR_MASTER_SLAVE);
         producer.setNamesrvAddr(Const.NAMESRV_ADDR_SINGLE);
         producer.start();
 
@@ -40,19 +40,19 @@ public class Producer {
 //            }
 
             // 消息自定义投递规则，发送到某个指定队列（下面例子是将消息指定发送到队列2中）
-            SendResult result = producer.send(message, (list, msg, o) -> {
-                        int queueNumber = (int) o;
-                        return list.get(queueNumber);
-                    },
-                    // arg是回调给MessageQueueSelector.select方法的参数
-                    2);
-            log.info("result: [{}]", result);
+//            SendResult result = producer.send(message, (list, msg, o) -> {
+//                        int queueNumber = (int) o;
+//                        return list.get(queueNumber);
+//                    },
+//                    // arg是回调给MessageQueueSelector.select方法的参数
+//                    2);
+//            log.info("result: [{}]", result);
 //
             // 2.1 同步发送消息
-//            SendResult sendResult = producer.send(message);
-//            SendStatus sendStatus = sendResult.getSendStatus();
-//            log.info("status: [{}]", sendStatus);
-//            log.info("消息发出： [{}]", sendResult);
+            SendResult sendResult = producer.send(message);
+            SendStatus sendStatus = sendResult.getSendStatus();
+            log.info("status: [{}]", sendStatus);
+            log.info("消息发出： [{}]", sendResult);
 
             // 2.2 异步发送消息
 //            producer.send(message, new SendCallback() {
@@ -71,6 +71,6 @@ public class Producer {
 //            });
         }
 
-//        producer.shutdown();
+        producer.shutdown();
     }
 }
