@@ -17,6 +17,7 @@ import java.util.List;
  * @author yangxin
  * 2020/07/01 20:46
  */
+@SuppressWarnings({"AlibabaRemoveCommentedCode", "CommentedOutCode"})
 @Slf4j
 public class Consumer2 {
 

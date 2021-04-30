@@ -33,7 +33,6 @@ public class PullConsumer {
         String groupName = "test_pull_consumer_name";
         DefaultMQPullConsumer consumer = new DefaultMQPullConsumer(groupName);
         consumer.setNamesrvAddr(Const.NAMESRV_ADDR_SINGLE);
-//        consumer.setNamesrvAddr(Const.NAMESRV_ADDR_MASTER_SLAVE);
         consumer.start();
         log.info("consumer start...");
 
@@ -51,9 +50,9 @@ public class PullConsumer {
                             null,
                             getMessageQueueOffset(messageQueue),
                             32);
-                    log.info("pullResult: [{}]", pullResult);
-                    log.info("pullStatus: [{}]", pullResult.getPullStatus());
+                    log.info("pullResult: [{}], pullStatus: [{}]", pullResult, pullResult.getPullStatus());
 
+                    // 存储消息消费进度
                     putMessageQueueOffset(messageQueue, pullResult.getNextBeginOffset());
 
                     switch (pullResult.getPullStatus()) {

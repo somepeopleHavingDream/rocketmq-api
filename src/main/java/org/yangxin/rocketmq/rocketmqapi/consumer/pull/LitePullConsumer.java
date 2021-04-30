@@ -39,7 +39,6 @@ public class LitePullConsumer {
         try {
             while (true) {
                 List<MessageExt> messageExtList = consumer.poll();
-//                log.info("messageExtList: [{}]", messageExtList);
                 for (MessageExt messageExt : messageExtList) {
                     String topic = messageExt.getTopic();
                     String tags = messageExt.getTags();
