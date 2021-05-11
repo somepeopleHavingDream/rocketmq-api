@@ -15,7 +15,7 @@ import java.util.*;
  * @author yangxin
  * 1/18/21 9:47 PM
  */
-@SuppressWarnings("InfiniteLoopStatement")
+@SuppressWarnings({"InfiniteLoopStatement", "AlibabaRemoveCommentedCode"})
 @Slf4j
 public class LitePullConsumer {
 

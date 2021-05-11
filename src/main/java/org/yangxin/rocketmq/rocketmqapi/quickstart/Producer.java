@@ -24,7 +24,7 @@ public class Producer {
 
         for (int i = 0; i < 5; i++) {
             // 1. 创建消息
-            // 主题
+            // 主题（如果RocketMq一开始没有这个Topic，则默认创建该Topic）
             Message message = new Message("test_quick_topic",
                     // 标签
                     "TagA",

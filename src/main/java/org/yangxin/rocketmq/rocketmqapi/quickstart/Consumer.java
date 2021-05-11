@@ -25,6 +25,7 @@ public class Consumer {
         consumer.subscribe("test_quick_topic", "*");
         // 消费者注册监听来进行消费
         consumer.registerMessageListener((MessageListenerConcurrently) (messageExtList, context) -> {
+            // 默认每次拉取下来的数据量为1，此值跟消费者的consumeMessageBatchMaxSize有关，默认值为1
             MessageExt messageExt = messageExtList.get(0);
             try {
                 String topic = messageExt.getTopic();
@@ -41,7 +42,7 @@ public class Consumer {
                 int reconsumeTimes = messageExt.getReconsumeTimes();
                 if (reconsumeTimes >= maxReconsumeTimes) {
                     // 记录日志
-                    // 做补偿处理
+                    // 做补偿处理（抛出异常后一定要处理，最终消息一定要消费成功，否则可能会出现重复消费情形）
                     log.error("重新消费次数达至3次，不再处理！");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
