@@ -42,6 +42,10 @@ public class Consumer {
         log.info("Consumer started.");
     }
 
+    /**
+     * 生产者在发送消息的时候，把消息发送到同一个队列（queue）中，
+     * 消费者注册消息监听器为MessageListenerOrderly，这样就可以保证消费端只有一个线程去消费消息。
+     */
     private static class Listener implements MessageListenerOrderly {
 
         private final Random random = new Random();
