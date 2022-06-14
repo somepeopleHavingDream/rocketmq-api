@@ -1,0 +1,219 @@
+# RocketMQ核心技术精讲与高并发抗压实战
+## 第1章 课程介绍
+- 核心技术讲解与原理分析
+    - 最新版本使用
+    - 学以致用
+    - 原理分析及源代码剖析
+    - 体会RocketMQ设计思想
+- 你能Get到的技能
+    - 掌握RocketMQ核心应用，更好地应对工作中MQ相关挑战
+    - 掌握RocketMQ集群搭建，助力快速投入到生产环境中
+    - 生产者：轻松解决消息同步/异步、延迟、顺序等问题
+    - 消费者：真正理解Offset存储机制、消费端重试、幂等策略
+    - 核心原理，进阶掌握高可用机制、协调服务，刷盘赋值策略
+    - SpringBoot2.x + Dubbo + Hystrix + RocketMQ
+    - 分流/限流，缓存路由，负载均衡，分库分表，抗压点分析
+    - 理解电商平台双十一高并发抗压的全链路核心流程
+## 第2章 RocketMQ初探门径
+- RocketMQ-整体介绍
+    - RocketMQ是一款分布式、队列模型的消息中间件
+    - 最新版本为：4.3.x版本（支持分布式事务）
+    - 支持集群模型、负载均衡、水平扩展能力
+    - 亿级别的消息堆积能力
+    - 采用零拷贝的原理、顺序写盘、随机读
+    - 丰富的API使用
+    - 代码优秀，底层通信框架采用Netty NIO框架
+    - NameServer代替Zookeeper
+    - 强调集群无单点，可扩展，任意一点高可用，水平可扩展
+    - 消息失败重试机制、消息可查询
+    - 开源社区活跃、成熟度（经过双十一考验）
+- RocketMQ-概念模型
+    - Producer：消息生产者，负责产生消息，一般由业务系统负责产生消息
+    - Consumer：消息消费者，负责消费消息，一般是后台系统负责异步消费
+    - Push Consumer：Consumer的一种，需要向Consumer对象注册监听
+    - Pull Consumer：Consumer的一种，需要主动请求Broker拉取消息
+    - Producer Group：生产者集合，一般用于发送一类消息
+    - Consumer Group：消费者集合，一般用于接受一类消息进行消费
+    - Broker：MQ消息服务（中转角色，用于信息存储与生产消费转发）
+- RocketMQ-源码包编译与结构说明
+    - rocketmq-broker 主要的业务逻辑，消息收发，主从同步，pagecache
+    - rocketmq-client 客户端接口，比如生产者和消费者
+    - rocketmq-example 示例，比如生产者和消费者
+    - rocketmq-common 公用数据结构等等
+    - rocketmq-distribution 编译模块，编译输出等
+    - rockemq-filter 进行Broker过滤的不感兴趣的消息传输，减小带宽压力
+    - rocketmq-logappender、rocketmq-logging日志相关
+    - rockemt-namesrv Namesrv服务，用于服务协调
+    - rocketmq-openmessaging 对外提供服务
+    - rocketmq-remoting 远程调用接口，封装Netty底层通信
+    - rocketmq-srvutil 提供一些公用的工具方法，比如解析命令行参数
+    - rocketmq-store 消息存储
+    - rocketmq-test rocketmq-example
+    - rocketmq-tools 管理工具，比如有名的mqadmin工具
+## 第3章 RocketMQ急速入门
+- RocketMQ-四种集群环境构建详解
+    - 单点模式
+    - 主从模式
+    - 双主模式
+    - 双主双从模式、多主多从模式
+- RocketMQ-主从模式集群环境构建与测试
+    - 主从模式环境构建可以保障消息的即时性与可靠性
+    - 投递一条消息后，关闭主节点
+    - 从节点继续可以提供消费者数据进行消费，但是不能接收消息
+    - 主节点上线后进行消费进度offset同步
+## 第4章 RocketMQ生产者核心讲解
+- RocketMQ主从同步机制解析
+    - Master-Slave主从同步
+    - 同步信息：数据内容+元数据信息
+    - 元数据同步：Broker角色识别，为Slave则启动同步任务
+    - 消息同步：HAService、HAConnection、WaitNotifyObject
+- RocketMQ生产者-消息的返回状态
+    - SEND_OK
+    - FLUSH_DISK_TIMEOUT
+    - FLUSH_SLAVE_TIMEOUT
+    - SLAVE_NOT_AVALIABLE
+- RocketMQ生产者-延迟消息
+    - 延迟消息：消息发到Broker后，要特定的时间才会被Consumer消费
+    - 目前只支持固定精度的定时消息
+    - MessageStoreConfig配置类和ScheduleMessageService任务类
+    - setDelayTimeLevel方法设置
+## 第5章 RocketMQ消费者核心讲解
+- PushConsumer消费模式-集群模式
+    - Clustering模式（默认）
+    - GroupName用于把多个Consumer组织到一起
+    - 相同GroupName的Consumer只消费所订阅消息的一部分
+    - 目的：达到天然的负载均衡机制
+- PushConsumer消费模式-广播模式
+    - Broadcasting模式（广播模式）
+    - 同一个ConsumerGroup里的Consumer都消费订阅Topic全部信息
+    - 也就是一条消息会被每一个Consumer消费
+    - setMessageModel方法
+- 消息存储核心-偏移量Offset
+    - Offset是消息消费进度的核心
+    - Offset指某个topic下的一条消息在某个MessageQueue里的位置
+    - 通过Offset可以进行定位到这条消息
+    - Offset的存储实现分为远程文件类型和本地文件类型两种
+- 集群模式-RemoteBrokerOffsetStore解析
+    - 默认集群模式clustering，采用远程文件存储Offset
+    - 本质上因为多消费模式，每个Consumer消费所订阅主题的一部分
+    - 这种情况需要broker控制offset的值，使用RemoteBrokerOffsetStore
+- 广播模式-LocalFileOffsetStore解析
+    - 广播模式下，由于每个Consumer都会收到消息且消费
+    - 各个Consumer之间没有任何干扰，独立线程消费
+    - 所以使用LocalFileOffsetStore，也就是把Offset存储到本地
+- PushConsumer长轮询模式分析
+    - DefaultPushConsumer是使用长轮询模式进行实现的
+    - 通常主流消息获取模式：Push消息推送模式和Pull消息拉取模式
+    - 长轮询机制
+- RocketMQ消费者-PullConsumer使用
+    - 消息拉取方式：DefaultMQPullConsumer
+    - Pull方式主要做了三件事：
+        -  获取Message Queue并遍历
+        - 维护OffsetStore
+        - 根据不同的消息状态做不同的处理
+## 第6章 RocketMQ核心原理解析
+- 同步刷盘与异步刷盘
+    - RocketMQ消息存储：内存+磁盘存储，两种刷盘方式
+    - 异步刷盘
+    - 同步刷盘
+- 同步复制与异步复制（一般采用同步复制，异步刷盘）
+    - 同一组Broker有Master-Slave角色
+    - 异步复制
+    - 同步复制
+- 高可用机制
+    - Master-Slave 高可用
+    - BrokerId
+    - Master读、写，Slave只读
+    - 当Master繁忙或者不可用时，可以自动切换到Slave读取消息
+- NameServer协调者
+    - 为什么需要NameServer
+    - NameServer是整个集群的状态服务器
+    - NameServer部署、相互独立
+    - 为什么不用zookeeper？
+## 第7章 双主双从部署实战
+## 第8章 购物车、订单与支付场景抗压需求分析
+- 双十一抗压场景分析
+    - 电商平台，用户加入购物车 -> 用户下单 -> 用户支付
+        - 用户加入购物车
+            - 1 用户加入购物车：设计缓存的业务维度
+            - 2 添加商品操作：根据路由Key进行路由到不同的Redis集群
+            - 3 Redis集群不宜过大：一般设置为一主两从
+            - 4 Redis数据同步问题：参考mysql binlog，配合RDB+AOF
+        - 用户下单
+            - 1 用户下单请求：根据业务维度请求不同的SET化服务器进行处理
+            - 2 注意高并发问题：流控、降级、兜底等
+            - 3 订单与库存一致性：数据库表结构设计、接口调用的最终一致性
+        - 用户支付
+            - 1 支付场景：A账户 - money && B账户 + money
+            - 2 传统方式：微服务同步强调强一致性 + 最终一致性（补偿）
+            - 3 mq方式：mq拆分复杂业务，保证高可靠性投递/最终一致性的问题
+- 双十一抗压场景解决方案
+    - 前端dns解析/软硬负载均衡设施进行分流/限流
+    - 缓存的业务维度拆分（比如按照业务特性进行拆分）
+    - 微服务流控（guava RateLimiter / jdk semaphore / netflix hystrix）
+    - 微服务熔断/降级/兜底（动态调整阈值/降级兜底策略等）
+    - 微服务接口的幂等性保障（比如使用redis分布式锁去做消息id去重）
+    - 数据库分库分表策略（设计契合业务的维度，利用合适的负载均衡算法）
+    - 冷热数据/读写分离（比如mysql读写分离/或es hive等）
+    - 对有效业务数据的过滤与业务的解耦/微服务的拆分
+    - 顺序消息机制，保障局部顺序并行化处理消息
+    - 分布式事务，将A、B账户操作进行高度解耦，提升并发性能、吞吐量
+## 第9章 微服务基础设施构建
+## 第10章 高并发抗压实战
+- 前端组件分流、限流设计
+    - 前端组件软负载均衡基础设施（lvs/nginx/haproxy）
+    - OpenResty 防刷、限流
+    - 限制接口总并发数：按照ip限制其并发连接数
+    - 平滑限制接口请求数：限制ip每分钟只能调用120接口（平滑处理请求，即每秒放过2个请求）
+    - 限制接口时间窗请求数：限制ip每分钟只能调用120次接口（允许在时间段开始的时候一次性放过120个请求）
+    - 漏桶算法限流：
+        - 限制ip每分钟只能调用120次接口（桶容量为120，平滑处理请求，即每秒放过2个请求），超过部分进入桶中等待，如果桶也满了，则进行限流）
+    - 令牌桶算法限流
+        - 限制ip每分钟只能调用120次接口，但是允许一定的突发流量（突发的流量，桶的容量超过桶容量（120），直接拒绝）
+- 多集群缓存设计-负载均衡算法
+    - 随机算法：获取多缓存集群节点的个数作为阈值，然后进行随机
+    - 轮询算法：按照顺序获取服务列表的数据，并进行索引递增，当达到最后一个服务列表数据时，进行计数器清零，重新开始循环
+    - 加权重随机/轮询算法：放大加权重的某个集群节点，然后进行随机/轮询即可
+    - Hash算法：使用调用方IP地址的hash值，然后与服务列表大小进行取模作为索引，根据索引取值
+- 微服务架构调用的问题点
+    - 网络原因、延迟
+    - 请求剧增、积压
+    - 线程资源无法释放等
+- Netflix Hystrix
+    - 控制远程访问系统、服务和第三方库
+    - 对延迟、故障提供更强大的容错能力
+    - 提供服务降级、熔断、线程隔离、请求缓存、合并、监控等功能
+- 分库分表设计
+    - 单数据库实例
+    - 读写分离
+    - 垂直拆分
+    - 水平拆分
+## 第11章 RocketMQ分布式事务消息
+## 第12章 RocketMQ顺序消费与微服务解耦
+- RocketMQ顺序消费的思想与设计
+    - 顺序消息：指的是消息的消费顺序和生产顺序相同
+    - 全局顺序：在某个topic下，所有的消息都要保证顺序（没太大意义）
+    - 局部顺序：只要保证每一组消息被顺序消费即可
+-  RocketMQ顺序消费实战整合应用
+    - 高并发下的用户下单订单场景（比如下单时候要求顺序消费消息，除了订单消息以外，还有扣库存消息/折扣消息等等）
+    - 不同的尚佳对应同一主题下不同的队列
+    - 这样做的好处就是并行处理操作的同时，保障顺序操作
+- 使用RocketMQ划清业务边界
+    - 使用消息中间件的一个重要目的就是为了进行业务边界的划分
+    - 如何界定业务边界？
+        - 专注于特定业务功能的服务，且可以实现多系统复用的服务
+        - 数据库设计层面上，可以维护到同一个数据库中的库表业务
+        - 非即时性的请求可以 异步进行处理，只返回即时性的请求结果
+## 第13章 数据过滤与性能提升
+- RocketMQ的过滤使用
+    - Tag方式进行消息过滤
+    - 使用sql表达式方式进行过滤
+    - 使用filter server组件方式进行过滤
+- 提升吞吐量/提高性能的最佳设置方案
+    - 提高Consumer处理能力，通过增加机器，启动多个Consumer实例，或者增加同一个Consumer的内部线程并行度
+    - 批量消费（设置consumeMessageBatchMaxSize参数）(批量ack)
+    - topic下的队列个数应该与Consumer数量契合
+    - 生产者发送oneway消息（对可靠性无要求）
+    - 多生产者同时发送消息
+    - 文件系统使用ext4/io调度算法使用deadline算法
+## 第14章 课程过滤
