@@ -3,7 +3,9 @@ package org.yangxin.rocketmq.rocketmqapi.quickstart;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.client.producer.*;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.SendStatus;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.yangxin.rocketmq.rocketmqapi.constants.Const;
@@ -48,6 +50,12 @@ public class Producer {
 //                    2);
 //            log.info("result: [{}]", result);
 //
+
+            /*
+                同步发送会阻塞发送线程，直到消息发送成功或发送失败。这意味着同步发送需要等待代理的响应，因此它通常比异步发送更慢。但是，同步发送可以保证消息已经成功发送到代理。
+                异步发送不会阻塞发送线程。它会立即返回一个Future对象，该对象可以用于检查消息是否已经成功发送到代理。由于异步发送不需要等待代理的响应，因此它通常比同步发送更快。但是，异步发送不能保证消息已经成功发送到代理。
+             */
+
             // 2.1 同步发送消息
             SendResult sendResult = producer.send(message);
             SendStatus sendStatus = sendResult.getSendStatus();
